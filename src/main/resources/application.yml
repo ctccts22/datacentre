@@ -1,0 +1,29 @@
+spring:
+  profiles:
+    active: local
+  datasource:
+    url: jdbc:mysql://3.38.191.137:3306/loli?serverTimezone=UTC&characterEncoding=UTF8
+    username: admin
+    password: Qkrruddnjs1!
+  jpa:
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org:
+      springframework:
+        security: debug
+    # org.hibernate.type: trace
+
+app:
+  jwt-secret: daf66e01593f61a15b857cf433aae03a005812b31234e149036bcc8dee755dbb
+  jwt-expiration-milliseconds: 604800000
+  refresh-token-expiration-milliseconds: 604800000
