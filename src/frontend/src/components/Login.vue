@@ -5,8 +5,8 @@ import { Login } from '@/model/login.model';
 import router from '@/router';
 
 const credentials = reactive<Login>({
-  id: '',
-  passwd: ''
+  usernameOrEmail: '',
+  password: ''
 });
 const authStore = useAuthStore();
 const loginHandler = async () => {
@@ -34,7 +34,7 @@ const loginHandler = async () => {
             <label for="id" class="sr-only">아이디:</label>
             <input
               id="id"
-              v-model="credentials.id"
+              v-model="credentials.usernameOrEmail"
               required
               class="appearance-none rounded-none relative block w-full py-2 px-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
               placeholder="아이디"
@@ -44,7 +44,7 @@ const loginHandler = async () => {
             <label for="password" class="sr-only">비밀번호:</label>
             <input
               id="password"
-              v-model="credentials.passwd"
+              v-model="credentials.password"
               type="password"
               required
               class="appearance-none rounded-none relative block w-full py-2 px-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"

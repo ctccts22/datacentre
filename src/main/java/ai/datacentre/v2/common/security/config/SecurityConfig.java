@@ -41,7 +41,7 @@ public class SecurityConfig {
                     @Override
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                         CorsConfiguration config = new CorsConfiguration();
-                        config.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
+                        config.setAllowedOrigins(Collections.singletonList("http://localhost:5173"));
                         config.setAllowedMethods(Collections.singletonList("*"));
                         config.setAllowCredentials(true);
                         config.setAllowedHeaders(Collections.singletonList("*"));
@@ -49,7 +49,7 @@ public class SecurityConfig {
                         config.setMaxAge(3600L);
                         return config;
                     }
-                })).csrf((csrf) -> csrf.csrfTokenRequestHandler(requestHandler).ignoringRequestMatchers("/api/contact")
+                })).csrf((csrf) -> csrf.csrfTokenRequestHandler(requestHandler).ignoringRequestMatchers("/api/**")
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint))
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)

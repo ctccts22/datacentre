@@ -19,7 +19,7 @@ export const useAuthStore = defineStore('auth', {
     setAccessToken(token: string | null) {
       this.accessToken = token;
     },
-    async login(credentials: { id: string, passwd: string }) {
+    async login(credentials: { usernameOrEmail: string, password: string }) {
       try {
         const response = await axios.post('/auth/login', credentials);
         console.log('Login response:', response.data);
@@ -90,7 +90,7 @@ export const useAuthStore = defineStore('auth', {
       isLogin(): boolean {
         if (!localStorage.getItem('user')) return false;
         const user = JSON.parse(localStorage.getItem('user') || '{}');
-        return user && user.id !== '';
+        return user && user.usernameOrEmail !== '';
       }
     }
   },

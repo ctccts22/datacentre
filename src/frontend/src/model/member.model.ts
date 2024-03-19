@@ -1,9 +1,9 @@
 export class Member {
-  public id: string;
-  public level: string | number;
+  public username: string;
+  public role: string;
 
-  constructor(id?: string, level?: string | number) {
-    this.id = id || '';
-    this.level = level || '';
+  constructor(username?: string, role?: string) {
+    this.username = username || '';
+    this.role = role || '';
   }
 }

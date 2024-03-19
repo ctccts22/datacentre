@@ -1,6 +1,5 @@
 package ai.datacentre.v2.common.security.provider;
 
-import ai.datacentre.v2.common.mapper.token.RefreshTokenMapper;
 import ai.datacentre.v2.common.model.dto.RefreshTokenDTO;
 import ai.datacentre.v2.common.repository.token.RefreshTokenRepository;
 import ai.datacentre.v2.common.security.exception.APIException;
@@ -13,10 +12,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.security.Key;
 import java.util.Date;
 import java.util.UUID;
+
+import static org.springframework.util.StringUtils.*;
 
 @Component
 @RequiredArgsConstructor
@@ -86,12 +88,18 @@ public class JwtTokenProvider {
     public RefreshTokenDTO generateRefreshToken(String username) {
         String refreshToken = UUID.randomUUID().toString().replace("-", "");
         Date expDate = new Date(System.currentTimeMillis() + refreshTokenExpirationDate);
-        RefreshTokenDTO refreshTokenBuilder = RefreshTokenDTO.builder()
+        return RefreshTokenDTO.builder()
                 .token(refreshToken)
                 .username(username)
                 .expiryDate(expDate)
                 .build();
+    }
 
-        return refreshTokenBuilder;
+    public void validateRefreshToken(RefreshTokenDTO refreshToken) {
+        long expiryDateTimeMillis = refreshToken.getExpiryDate().getTime();
+        long currentTimeMillis = new Date().getTime();
+        if (!hasText(refreshToken.getToken()) || currentTimeMillis > expiryDateTimeMillis) {
+            throw new APIException(HttpStatus.BAD_REQUEST, "Expired RefreshToken");
+        }
     }
 }
