@@ -77,7 +77,7 @@ public class AuthServiceImpl implements AuthService {
                 refreshTokenRepository.save(refreshToken); // insert
             }
             return new JWTAuthResponse(jwt, "Bearer", refreshToken.getToken());
-            
+
         } catch (Exception e) {
             log.error("Error during authentication: ", e);
             throw e;
