@@ -10,9 +10,6 @@ import java.util.Date;
 
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, String>, RefreshTokenRepositoryCustom, QuerydslPredicateExecutor {
 
-    @Query("SELECT r.expiryDate FROM RefreshToken r WHERE r.token = :refreshToken")
-    Date findExpiryDateByToken(@Param("refreshToken") String refreshToken);
-
     boolean existsByUsername(String username);
 
     void deleteByUsername(String username);

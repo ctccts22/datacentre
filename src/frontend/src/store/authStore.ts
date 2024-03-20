@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import axios from '@/plugin/axios.ts';
 import router from '@/router';
 import { Member } from '@/model/member.model';
-import jwt_decode from 'vue-jwt-decode';
+import * as authService from '@/service/authService.ts'; //make sure to replace with the correct path
 
 export const useAuthStore = defineStore('auth', {
   state: (): {
@@ -18,21 +18,20 @@ export const useAuthStore = defineStore('auth', {
     },
     setAccessToken(token: string | null) {
       this.accessToken = token;
+      axios.defaults.headers.common['Authorization'] = token ? `Bearer ${token}` : null;
     },
     async login(credentials: { usernameOrEmail: string, password: string }) {
       try {
-        const response = await axios.post('/auth/login', credentials);
-        console.log('Login response:', response.data);
-        if (response.data && response.data.accessToken) {
-          const token = response.data.accessToken;
-          this.setAccessToken(token);
-          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        const response = await authService.login(credentials);
+
+        if (response && response.accessToken) {
+          this.setAccessToken(response.accessToken);
+
           await this.fetchCurrentUser();
 
           if (this.getters.isAccessTokenExpired()) {
             await this.refreshToken();
           }
-
           localStorage.setItem('user', JSON.stringify(this.user));
         } else {
           console.error('Error during login:');
@@ -44,8 +43,7 @@ export const useAuthStore = defineStore('auth', {
     },
     async fetchCurrentUser() {
       try {
-        const response = await axios.get('/auth/info');
-        console.log('fetchCurrentUser response:', response.data);
+        const response = await authService.fetchCurrentUser();
         this.setUser(response.data);
       } catch (error) {
         console.error('Error fetching current user:', error);
@@ -54,11 +52,9 @@ export const useAuthStore = defineStore('auth', {
     },
     async logout() {
       try {
-        await axios.post('/auth/logout', null, {
-          params: {
-            refreshToken: this.accessToken
-          }
-        });
+        if (this.accessToken) {
+          await authService.logout(this.accessToken as string);
+        }
         this.setUser(new Member());
         this.setAccessToken(null);
         localStorage.clear();
@@ -70,12 +66,10 @@ export const useAuthStore = defineStore('auth', {
     },
     async refreshToken() {
       try {
-        const response = await axios.post('/auth/refresh', null, {
-          params: {
-            refreshToken: this.accessToken
-          }
-        });
-        this.setAccessToken(response.data.accessToken);
+        if (this.accessToken !== null) {
+          const response = await authService.refreshToken(this.accessToken);
+          this.setAccessToken(response.data.accessToken);
+        }
       } catch (error) {
         console.error('Error during token refresh:', error);
         throw error;
@@ -83,9 +77,7 @@ export const useAuthStore = defineStore('auth', {
     },
     getters: {
       isAccessTokenExpired(): boolean {
-        if (!this.accessToken) return true;
-        const accessTokenExp = jwt_decode(this.accessToken).exp;
-        return Date.now() >= accessTokenExp * 1000;
+        return authService.isAccessTokenExpired(this.accessToken);
       },
       isLogin(): boolean {
         if (!localStorage.getItem('user')) return false;

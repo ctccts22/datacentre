@@ -92,12 +92,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public void logout(String refreshToken) {
-        // front-end also have same code as backend
-        Date expDate = refreshTokenRepository.findExpiryDateByToken(refreshToken);
-        Date now = new Date();
-        if (expDate != null && expDate.before(now)) {
-            refreshTokenRepository.deleteById(refreshToken);
-        }
+        refreshTokenRepository.deleteById(refreshToken);
     }
 
     @Override
