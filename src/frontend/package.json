@@ -16,7 +16,10 @@
     "vue": "^3.3.11",
     "vue-jwt-decode": "^0.1.0",
     "vue-router": "^4.2.5",
-    "vuebar": "^0.0.20"
+    "vuebar": "^0.0.20",
+    "chart.js": "^2.9.4",
+    "vue-chartjs": "^3.5.0",
+    "core-js": "^3.6.4"
   },
   "devDependencies": {
     "@types/node": "^20.11.8",
