@@ -67,9 +67,9 @@ public class AuthServiceImpl implements AuthService {
             SecurityContextHolder.getContext().setAuthentication(authResult);
             // AccessToken
             String jwt = jwtTokenProvider.generateToken(authResult);
+
             // RefreshToken -> sending username
             String username = authReq.getUsername();
-
             boolean existUsername = refreshTokenRepository.existsByUsername(username);
 
             if (existUsername) {
