@@ -15,13 +15,9 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MemberDTO {
-
-    private Long id;
+public class MemberFindConditionDTO {
     @NotBlank
     private String username;
-    @NotBlank
-    private String password;
     @NotBlank
     private String name;
     @NotBlank
@@ -33,10 +29,8 @@ public class MemberDTO {
     private LocalDateTime ldate;
 
     @QueryProjection
-    public MemberDTO(Long id, String username, String password, String name, String email, Role role, Status status, LocalDateTime rdate, LocalDateTime ldate) {
-        this.id = id;
+    public MemberFindConditionDTO(String username, String name, String email, Role role, Status status, LocalDateTime rdate, LocalDateTime ldate) {
         this.username = username;
-        this.password = password;
         this.name = name;
         this.email = email;
         this.role = role;

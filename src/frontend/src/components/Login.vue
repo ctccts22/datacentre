@@ -71,7 +71,7 @@ const loginHandler = async () => {
       </div>
 
       <p class="mt-10 text-center text-sm text-gray-500">
-        <a href="#" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">회원가입</a>
+        <router-link :to="{ path: '/registration' }" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">회원가입</router-link>
       </p>
     </div>
   </div>

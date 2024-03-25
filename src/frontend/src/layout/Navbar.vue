@@ -78,6 +78,13 @@ const logoutHandler = async () => {
                         로그아웃
                       </a>
                     </MenuItem>
+                    <MenuItem v-slot="{ active }" v-if="authStore.user.role === 'ADMIN'">
+                      <router-link
+                        :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']"
+                        :to="{path : '/'}">
+                        회원관리
+                      </router-link>
+                    </MenuItem>
                   </MenuItems>
                 </transition>
               </Menu>

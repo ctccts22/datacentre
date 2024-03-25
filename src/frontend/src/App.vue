@@ -6,7 +6,7 @@ import Footer from '@/layout/Footer.vue';
 
 const route = useRoute();
 
-const showNavbarFooter = computed(() => route.path !== '/login');
+const showNavbarFooter = computed(() => route.path !== '/login' && route.path !== '/registration');
 </script>
 <template>
   <div id="app">

@@ -23,6 +23,10 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    path: "/registration",
+    component: () => import("../components/Registration.vue")
+  },
+  {
     path: "/login",
     component: () => import("../components/Login.vue"),
     beforeEnter: (_, __, next) => {
