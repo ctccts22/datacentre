@@ -19,7 +19,7 @@ const searchMembers = async () => {
 }
 
 const goToPage = async (page: number) => {
-  if (page < 1 || page > totalPages.value || page === pagination.value.page) {
+  if (page < 0 || page >= totalPages.value || page === pagination.value.page) {
     return;
   }
   pagination.value.page = page;
@@ -42,7 +42,7 @@ onMounted(async () => {
           and role.</p>
       </div>
       <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-        <button type="button"
+        <button type="button" @click="searchMembers"
                 class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
           검색
         </button>
@@ -121,7 +121,7 @@ onMounted(async () => {
     <nav class="flex items-center justify-between border-t border-gray-200 px-4 sm:px-0 mt-8">
       <div class="-mt-px flex w-0 flex-1">
         <button @click.prevent="goToPage(pagination.page - 1)"
-                :class="{ 'text-gray-500': pagination.page === 1, 'text-indigo-600 hover:text-indigo-900': pagination.page !== 1 }"
+                :class="{ 'text-gray-500': pagination.page === 0, 'text-indigo-600 hover:text-indigo-900': pagination.page !== 0 }"
                 class="inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium">
           <ArrowLongLeftIcon class="mr-3 h-5 w-5" aria-hidden="true"/>
           Previous
@@ -131,7 +131,7 @@ onMounted(async () => {
       <div class="hidden md:-mt-px md:flex">
         <template v-for="page in totalPages">
           <button @click.prevent="goToPage(page)"
-                  :class="{ 'border-indigo-500 text-indigo-600': pagination.page === page, 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': pagination.number !== page }"
+                  :class="{ 'border-indigo-500 text-indigo-600': pagination.page === page - 1, 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': pagination.page !== page - 1 }"
                   class="inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium">
             {{ page }}
           </button>

@@ -26,9 +26,10 @@ export const useMemberStore = defineStore('member', {
     async memberSearch() {
      try {
        const response = await memberService.memberSearch(this.memberCondition, this.pagination);
+       console.log("response", response);
        this.memberList = response.data.content;
        this.totalElements = response.data.totalElements;
-       this.totalPages = response.data.totalPages -1; // -1 필수
+       this.totalPages = response.data.totalPages;
      } catch (e) {
        console.error('Error during login:', e);
        throw e;
