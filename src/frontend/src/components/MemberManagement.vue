@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ArrowLongLeftIcon, ArrowLongRightIcon } from '@heroicons/vue/20/solid';
-import { useMemberStore } from "@/store/memberStore.ts";
-import { computed, onMounted } from "vue";
+import {ArrowLongLeftIcon, ArrowLongRightIcon} from '@heroicons/vue/20/solid';
+import {useMemberStore} from "@/store/memberStore.ts";
+import {computed, onMounted} from "vue";
 
 const membersStore = useMemberStore();
 
@@ -130,7 +130,7 @@ onMounted(async () => {
 
       <div class="hidden md:-mt-px md:flex">
         <template v-for="page in totalPages">
-          <button @click.prevent="goToPage(page)"
+          <button @click.prevent="goToPage(page -1)"
                   :class="{ 'border-indigo-500 text-indigo-600': pagination.page === page - 1, 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': pagination.page !== page - 1 }"
                   class="inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium">
             {{ page }}
@@ -140,7 +140,7 @@ onMounted(async () => {
 
       <div class="-mt-px flex w-0 flex-1 justify-end">
         <button @click.prevent="goToPage(pagination.page + 1)"
-                :class="{ 'text-gray-500': pagination.page === totalPages, 'text-indigo-600 hover:text-indigo-900': pagination.page !== totalPages }"
+                :class="{ 'text-gray-500': pagination.page === totalPages -1 , 'text-indigo-600 hover:text-indigo-900': pagination.page !== totalPages -1 }"
                 class="inline-flex items-center border-t-2 border-transparent pl-1 pt-4 text-sm font-medium">
           Next
           <ArrowLongRightIcon class="ml-3 h-5 w-5" aria-hidden="true"/>
