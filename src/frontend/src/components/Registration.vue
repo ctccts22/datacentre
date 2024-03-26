@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { BuildingOffice2Icon, EnvelopeIcon, PhoneIcon } from '@heroicons/vue/24/outline'
 import {reactive, watch} from "vue";
-import {RegMember} from "@/model/regMember.model.ts";
 import {useMemberStore} from "@/store/memberStore.ts";
 import router from "@/router";
+import {RegMember} from "@/model/member.register.model.ts";
 
 const registerInfo = reactive<RegMember>({
   username: '',

@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia';
 import axios from '@/plugin/axios.ts';
 import router from '@/router';
-import { Member } from '@/model/member.model';
-import * as authService from '@/service/authService.ts'; //make sure to replace with the correct path
+import * as authService from '@/service/authService.ts';
+import {Member} from "@/model/member.auth.model.ts";
 
 export const useAuthStore = defineStore('auth', {
   state: (): {

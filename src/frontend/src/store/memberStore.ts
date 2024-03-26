@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia';
-import {RegMember} from "@/model/regMember.model.ts";
 import * as memberService from '@/service/memberService.ts';
 import {MemberSearchCondition} from "@/model/member.search.model.ts";
+import {RegMember} from "@/model/member.register.model.ts";
 export const useMemberStore = defineStore('member', {
   state: () => ({
     regMember: new RegMember(),
-    MemberSearchCondition: new MemberSearchCondition(),
+    memberCondition: new MemberSearchCondition(),
   }),
   actions: {
     async registerMember(registerMemberDTO: RegMember) {
@@ -18,7 +18,8 @@ export const useMemberStore = defineStore('member', {
     },
     async memberSearch(memberSearchConditionDTO: MemberSearchCondition) {
      try {
-       await memberService.memberSearch(memberSearchConditionDTO);
+       const response = await memberService.memberSearch(memberSearchConditionDTO);
+       this.memberCondition = response.data;
      } catch (e) {
        console.error('Error during login:', e);
        throw e;

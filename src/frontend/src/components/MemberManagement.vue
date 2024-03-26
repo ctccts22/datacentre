@@ -1,8 +1,15 @@
 <script setup lang="ts">
 import { ArrowLongLeftIcon, ArrowLongRightIcon } from '@heroicons/vue/20/solid'
-const people = [
-  {name: 'Lindsay Walton', title: 'Front-end Developer', email: 'lindsay.walton@example.com', role: 'Member'},
-]
+import {useMemberStore} from "@/store/memberStore.ts";
+import {onMounted} from "vue";
+import {MemberSearchCondition} from "@/model/member.search.model.ts";
+const membersStore = useMemberStore();
+
+let memberSearchCondition = new MemberSearchCondition()
+onMounted(async () => {
+  await membersStore.memberCondition(memberSearchCondition)
+})
+
 </script>
 
 <template>

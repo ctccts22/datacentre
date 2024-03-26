@@ -1,6 +1,5 @@
 package ai.datacentre.v2.common.controller;
 
-import ai.datacentre.v2.common.model.dto.MemberDTO;
 import ai.datacentre.v2.common.model.dto.MemberFindConditionDTO;
 import ai.datacentre.v2.common.model.dto.MemberSearchConditionDTO;
 import ai.datacentre.v2.common.model.dto.RegisterMemberDTO;
@@ -15,8 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/member")
