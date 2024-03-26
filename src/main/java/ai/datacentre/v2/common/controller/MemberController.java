@@ -34,6 +34,8 @@ public class MemberController {
     @GetMapping("/member-management")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Page<MemberFindConditionDTO>> getAllMembers(MemberSearchConditionDTO condition, Pageable pageable) {
+        log.info("pageable: {}", pageable);
+        log.info("condition: {}", condition);
         Page<MemberFindConditionDTO> members = memberService.getAllMembers(condition, pageable);
         return ResponseEntity.ok(members);
     }

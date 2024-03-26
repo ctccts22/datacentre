@@ -2,14 +2,11 @@ import { defineStore } from 'pinia';
 import axios from '@/plugin/axios.ts';
 import router from '@/router';
 import * as authService from '@/service/authService.ts';
-import {Member} from "@/model/member.auth.model.ts";
+import {Member} from "../model/member.auth.model.ts"
 
 export const useAuthStore = defineStore('auth', {
-  state: (): {
-    user: Member,
-    accessToken: string | null
-  } => ({
-    user: new Member(),
+  state: () :{accessToken: string | null, user: Member} => ({
+    user: JSON.parse(localStorage.getItem('user') || '{}') as Member,
     accessToken: null
   }),
   actions: {

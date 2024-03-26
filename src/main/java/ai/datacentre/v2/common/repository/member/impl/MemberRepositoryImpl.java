@@ -12,6 +12,7 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -25,6 +26,7 @@ import java.util.Optional;
 import static ai.datacentre.v2.common.model.entity.QMember.*;
 import static org.springframework.util.StringUtils.*;
 
+@Slf4j
 public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
@@ -84,6 +86,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                         dateBetween(condition.getRdateStart(), condition.getRdateStart())
                 );
 
+        log.info("pageable: {}", pageable);
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
 
