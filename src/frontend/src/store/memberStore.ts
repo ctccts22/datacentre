@@ -11,6 +11,16 @@ export const useMemberStore = defineStore('member', {
     regMember: new RegMember(),
     memberCondition: new MemberSearchCondition(),
     pagination: new PaginationModel(),
+    role: [
+      { value: '', label: '--' },
+      { value: 'ADMIN', label: 'Admin' },
+      { value: 'USER', label: 'User' }
+    ],
+    status: [
+      { value: '', label: '--' },
+      { value: 'APPROVED', label: 'Active' },
+      { value: 'DELETED', label: 'Inactive' }
+    ],
     totalElements: 0,
     totalPages: 0
   }),
@@ -25,8 +35,9 @@ export const useMemberStore = defineStore('member', {
     },
     async memberSearch() {
      try {
+       console.log('memberSearch called with:', this.memberCondition, this.pagination);
        const response = await memberService.memberSearch(this.memberCondition, this.pagination);
-       console.log("response", response);
+       console.log('memberSearch response:', response);
        this.memberList = response.data.content;
        this.totalElements = response.data.totalElements;
        this.totalPages = response.data.totalPages;

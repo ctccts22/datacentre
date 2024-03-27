@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import {ArrowLongLeftIcon, ArrowLongRightIcon} from '@heroicons/vue/20/solid';
+import {Listbox, ListboxButton, ListboxLabel, ListboxOption, ListboxOptions} from '@headlessui/vue'
+import {CheckIcon, ChevronUpDownIcon} from '@heroicons/vue/20/solid'
 import {useMemberStore} from "@/store/memberStore.ts";
-import {computed, onMounted} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 
 const membersStore = useMemberStore();
 
@@ -9,6 +11,10 @@ const pagination = computed(() => membersStore.pagination);
 const memberList = computed(() => membersStore.memberList);
 const memberSearch = computed(() => membersStore.memberCondition);
 const totalPages = computed(() => membersStore.totalPages);
+const roles = computed(() => membersStore.role);
+const selectedRole = ref(roles.value[0]);
+const status = computed(() => membersStore.status);
+const selectedStatus = ref(status.value[0]);
 
 const searchMembers = async () => {
   try {
@@ -29,6 +35,24 @@ const goToPage = async (page: number) => {
 onMounted(async () => {
   console.log("mount");
   await searchMembers();
+});
+
+watch(memberSearch, async (newVal, oldVal) => {
+  if (newVal !== oldVal) {
+    await searchMembers();
+  }
+}, {deep: true});
+
+watch(selectedRole, (newVal, oldVal) => {
+  if (newVal !== oldVal) {
+    memberSearch.value.role = newVal.value;
+  }
+});
+
+watch(selectedStatus, (newVal, oldVal) => {
+  if (newVal !== oldVal) {
+    memberSearch.value.status = newVal.value;
+  }
 });
 </script>
 
@@ -59,18 +83,71 @@ onMounted(async () => {
         </div>
 
         <div class="sm:col-span-3">
-          <label for="last-name" class="block text-sm font-medium leading-6 text-gray-900">권한</label>
-          <div class="mt-2">
-            <input type="text" v-model="memberSearch.role"
-                   class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
-          </div>
+          <Listbox as="div" v-model="selectedRole">
+            <ListboxLabel class="block text-sm font-medium leading-6 text-gray-900">권한</ListboxLabel>
+            <div class="relative mt-2">
+              <ListboxButton
+                class="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                <span class="block truncate">{{ selectedRole.label }}</span>
+                <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+            <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true"/>
+          </span>
+              </ListboxButton>
+              <transition leave-active-class="transition ease-in duration-100" leave-from-class="opacity-100"
+                          leave-to-class="opacity-0">
+                <ListboxOptions
+                  class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                  <ListboxOption as="template" v-for="role in roles" :key="role.value" :value="role"
+                                 v-slot="{ active, selected }">
+                    <li
+                      :class="[active ? 'bg-indigo-600 text-white' : 'text-gray-900', 'relative cursor-default select-none py-2 pl-3 pr-9']">
+                      <span :class="[selected ? 'font-semibold' : 'font-normal', 'block truncate']">{{
+                          role.label
+                        }}</span>
+                      <span v-if="selected"
+                            :class="[active ? 'text-white' : 'text-indigo-600', 'absolute inset-y-0 right-0 flex items-center pr-4']">
+                  <CheckIcon class="h-5 w-5" aria-hidden="true"/>
+                </span>
+                    </li>
+                  </ListboxOption>
+                </ListboxOptions>
+              </transition>
+            </div>
+          </Listbox>
         </div>
+
         <div class="sm:col-span-3">
-          <label for="last-name" class="block text-sm font-medium leading-6 text-gray-900">상태</label>
-          <div class="mt-2">
-            <input type="text" v-model="memberSearch.status"
-                   class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
-          </div>
+          <Listbox as="div" v-model="selectedStatus">
+            <ListboxLabel class="block text-sm font-medium leading-6 text-gray-900">상태</ListboxLabel>
+            <div class="relative mt-2">
+              <ListboxButton
+                class="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                <span class="block truncate">{{ selectedStatus.label }}</span>
+                <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+            <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true"/>
+          </span>
+              </ListboxButton>
+              <transition leave-active-class="transition ease-in duration-100" leave-from-class="opacity-100"
+                          leave-to-class="opacity-0">
+                <ListboxOptions
+                  class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                  <ListboxOption as="template" v-for="st in status" :key="st.value" :value="st"
+                                 v-slot="{ active, selected }">
+                    <li
+                      :class="[active ? 'bg-indigo-600 text-white' : 'text-gray-900', 'relative cursor-default select-none py-2 pl-3 pr-9']">
+                      <span :class="[selected ? 'font-semibold' : 'font-normal', 'block truncate']">{{
+                          st.label
+                        }}</span>
+                      <span v-if="selected"
+                            :class="[active ? 'text-white' : 'text-indigo-600', 'absolute inset-y-0 right-0 flex items-center pr-4']">
+                  <CheckIcon class="h-5 w-5" aria-hidden="true"/>
+                </span>
+                    </li>
+                  </ListboxOption>
+                </ListboxOptions>
+              </transition>
+            </div>
+          </Listbox>
         </div>
         <div class="sm:col-span-3">
           <label for="last-name" class="block text-sm font-medium leading-6 text-gray-900">가입날짜</label>
@@ -124,7 +201,7 @@ onMounted(async () => {
                 :class="{ 'text-gray-500': pagination.page === 0, 'text-indigo-600 hover:text-indigo-900': pagination.page !== 0 }"
                 class="inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium">
           <ArrowLongLeftIcon class="mr-3 h-5 w-5" aria-hidden="true"/>
-          Previous
+          이전
         </button>
       </div>
 
@@ -142,7 +219,7 @@ onMounted(async () => {
         <button @click.prevent="goToPage(pagination.page + 1)"
                 :class="{ 'text-gray-500': pagination.page === totalPages -1 , 'text-indigo-600 hover:text-indigo-900': pagination.page !== totalPages -1 }"
                 class="inline-flex items-center border-t-2 border-transparent pl-1 pt-4 text-sm font-medium">
-          Next
+          다음
           <ArrowLongRightIcon class="ml-3 h-5 w-5" aria-hidden="true"/>
         </button>
       </div>
