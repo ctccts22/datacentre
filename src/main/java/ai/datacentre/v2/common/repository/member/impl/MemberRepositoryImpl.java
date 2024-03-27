@@ -71,7 +71,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                 .where(nameEq(condition.getName()),
                         statusEq(condition.getStatus()),
                         roleEq(condition.getRole()),
-                        dateBetween(condition.getRdateStart(), condition.getRdateStart())
+                        dateBetween(condition.getRdateStart(), condition.getRdateEnd())
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -83,7 +83,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                 .where(nameEq(condition.getName()),
                         statusEq(condition.getStatus()),
                         roleEq(condition.getRole()),
-                        dateBetween(condition.getRdateStart(), condition.getRdateStart())
+                        dateBetween(condition.getRdateStart(), condition.getRdateEnd())
                 );
 
         log.info("pageable: {}", pageable);

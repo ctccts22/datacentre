@@ -2,6 +2,8 @@
 import {ArrowLongLeftIcon, ArrowLongRightIcon} from '@heroicons/vue/20/solid';
 import {Listbox, ListboxButton, ListboxLabel, ListboxOption, ListboxOptions} from '@headlessui/vue'
 import {CheckIcon, ChevronUpDownIcon} from '@heroicons/vue/20/solid'
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 import {useMemberStore} from "@/store/memberStore.ts";
 import {computed, onMounted, ref, watch} from "vue";
 
@@ -15,6 +17,7 @@ const roles = computed(() => membersStore.role);
 const selectedRole = ref(roles.value[0]);
 const status = computed(() => membersStore.status);
 const selectedStatus = ref(status.value[0]);
+const date = ref();
 
 const searchMembers = async () => {
   try {
@@ -54,8 +57,34 @@ watch(selectedStatus, (newVal, oldVal) => {
     memberSearch.value.status = newVal.value;
   }
 });
-</script>
+watch(date, (newVal, oldVal) => {
+  if (newVal !== oldVal) {
+    if (newVal) {
+      memberSearch.value.rdateStart = getJavaLocalDateTimeString(newVal[0]);
+      memberSearch.value.rdateEnd = getJavaLocalDateTimeString(newVal[1]);
+    } else {
+      memberSearch.value.rdateStart = '';
+      memberSearch.value.rdateEnd = '';
+    }
+  }
+});
 
+const getJavaLocalDateTimeString = (jsDate: any) => {
+  return jsDate.getUTCFullYear() + '-' +
+    pad(jsDate.getUTCMonth() + 1) + '-' +
+    pad(jsDate.getUTCDate()) + 'T' +
+    pad(jsDate.getUTCHours()) + ':' +
+    pad(jsDate.getUTCMinutes()) + ':' +
+    pad(jsDate.getUTCSeconds());
+}
+
+const pad = (number: any) => {
+  if (number < 10) {
+    return '0' + number;
+  }
+  return number;
+}
+</script>
 
 <template>
   <div class="px-4 sm:px-6 lg:px-8">
@@ -152,8 +181,8 @@ watch(selectedStatus, (newVal, oldVal) => {
         <div class="sm:col-span-3">
           <label for="last-name" class="block text-sm font-medium leading-6 text-gray-900">가입날짜</label>
           <div class="mt-2">
-            <input type="text" v-model="memberSearch.rdateStart"
-                   class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
+            <VueDatePicker v-model="date" range multi-calendars
+                           class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
           </div>
         </div>
       </div>
