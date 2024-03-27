@@ -4,11 +4,13 @@ import {MemberSearchCondition} from "@/model/member.search.model.ts";
 import {RegMember} from "@/model/member.register.model.ts";
 import {PaginationModel} from "@/model/pagination.model.ts";
 import {MemberModel} from "@/model/member.model.ts";
+import {UpdateMember} from "@/model/member.update.model.ts";
 
 export const useMemberStore = defineStore('member', {
   state: () => ({
     memberList: [] as MemberModel[],
     regMember: new RegMember(),
+    updateMember: new UpdateMember(),
     memberCondition: new MemberSearchCondition(),
     pagination: new PaginationModel(),
     role: [
@@ -28,6 +30,14 @@ export const useMemberStore = defineStore('member', {
     async registerMember(registerMemberDTO: RegMember) {
       try {
         await memberService.registerMember(registerMemberDTO);
+      } catch (e) {
+        console.error('Error during login:', e);
+        throw e;
+      }
+    },
+    async updateMember(updateMemberDTO: UpdateMember) {
+      try {
+        await memberService.updateMember(updateMemberDTO);
       } catch (e) {
         console.error('Error during login:', e);
         throw e;

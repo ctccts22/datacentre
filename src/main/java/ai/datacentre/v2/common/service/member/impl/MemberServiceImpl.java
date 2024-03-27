@@ -1,10 +1,7 @@
 package ai.datacentre.v2.common.service.member.impl;
 
 import ai.datacentre.v2.common.mapper.member.MemberMapper;
-import ai.datacentre.v2.common.model.dto.MemberDTO;
-import ai.datacentre.v2.common.model.dto.MemberFindConditionDTO;
-import ai.datacentre.v2.common.model.dto.MemberSearchConditionDTO;
-import ai.datacentre.v2.common.model.dto.RegisterMemberDTO;
+import ai.datacentre.v2.common.model.dto.*;
 import ai.datacentre.v2.common.model.entity.Member;
 import ai.datacentre.v2.common.model.enums.Role;
 import ai.datacentre.v2.common.model.enums.Status;
@@ -36,8 +33,8 @@ public class MemberServiceImpl implements MemberService {
         return usernameDup.isPresent() || emailDup.isPresent();
     }
 
-    private boolean checkPassword(RegisterMemberDTO registerMemberDTO) {
-        return Objects.equals(registerMemberDTO.getCheckPassword(), registerMemberDTO.getPassword());
+    private boolean checkPassword(String checkPassword, String password) {
+        return Objects.equals(checkPassword, password);
     }
 
     @Override
@@ -47,7 +44,7 @@ public class MemberServiceImpl implements MemberService {
         if (checkDuplicate) {
             throw new DuplicateKeyException("중복된 값이 존재합니다.");
         }
-        var checkPassword = checkPassword(registerMemberDTO);
+        var checkPassword = checkPassword(registerMemberDTO.getCheckPassword(), registerMemberDTO.getPassword());
         if (!checkPassword) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다");
         }
@@ -70,6 +67,36 @@ public class MemberServiceImpl implements MemberService {
     @Transactional(readOnly = true)
     public Page<MemberFindConditionDTO> getAllMembers(MemberSearchConditionDTO condition, Pageable pageable) {
         return memberRepository.findAllMembers(condition, pageable);
+    }
+
+    @Override
+    @Transactional
+    public void updateMember(String username, UpdateMemberDTO updateMemberDTO) {
+        var member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다."));
+
+        var checkPassword = checkPassword(updateMemberDTO.getCheckPassword(), updateMemberDTO.getPassword());
+        if (!checkPassword) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다");
+        }
+        UpdateMemberDTO updateMemberData = UpdateMemberDTO.builder()
+                .username(username)
+                .password(passwordEncoder.encode(updateMemberDTO.getPassword()))
+                .name(updateMemberDTO.getName())
+                .role(updateMemberDTO.getRole())
+                .status(updateMemberDTO.getStatus())
+                .ldate(LocalDateTime.now())
+                .build();
+        // convert DTO to Entity
+        Member updateMemberEntity = Member.builder()
+                .username(updateMemberData.getUsername())
+                .password(updateMemberData.getPassword())
+                .name(updateMemberData.getName())
+                .role(updateMemberData.getRole())
+                .status(updateMemberData.getStatus())
+                .ldate(updateMemberData.getLdate())
+                .build();
+        memberRepository.save(updateMemberEntity);
     }
 
 }

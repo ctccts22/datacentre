@@ -2,6 +2,12 @@ import axios from "@/plugin/axios.ts";
 import {MemberSearchCondition} from "@/model/member.search.model.ts";
 import {RegMember} from "@/model/member.register.model.ts";
 import {PaginationModel} from "@/model/pagination.model.ts";
+import {UpdateMember} from "@/model/member.update.model.ts";
+
+export async function updateMember(updateMemberDTO: UpdateMember) {
+  return await axios.put(`/member/modification/${updateMemberDTO.username}`, updateMemberDTO);
+}
+
 
 export async function memberSearch(memberSearchConditionDTO: MemberSearchCondition, pagination: PaginationModel) {
   console.log("pagination", pagination);
