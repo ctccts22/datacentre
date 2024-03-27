@@ -19,6 +19,11 @@ const status = computed(() => membersStore.status);
 const selectedStatus = ref(status.value[0]);
 const date = ref();
 
+const updateHandler = async (username: string) => {
+  console.log('updateHandler:', username);
+
+}
+
 const searchMembers = async () => {
   try {
     await membersStore.memberSearch();
@@ -214,10 +219,10 @@ const pad = (number: any) => {
           <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ member.status }}</td>
           <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ member.rdate }}</td>
           <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ member.ldate }}</td>
-          <td class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-            <a href="#" class="text-indigo-600 hover:text-indigo-900">
+          <td class="whitespace-nowrap py-4 pl-3 pr-4 text-sm font-medium sm:pr-0">
+            <button type="button" @click="updateHandler(member.username)" class="text-indigo-600 hover:text-indigo-900">
               Edit
-            </a>
+            </button>
           </td>
         </tr>
         </tbody>
