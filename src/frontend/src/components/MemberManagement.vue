@@ -6,6 +6,7 @@ import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import {useMemberStore} from "@/store/memberStore.ts";
 import {computed, onMounted, ref, watch} from "vue";
+import UpdateModal from "@/components/modal/UpdateModal.vue";
 
 const membersStore = useMemberStore();
 
@@ -19,10 +20,13 @@ const status = computed(() => membersStore.status);
 const selectedStatus = ref(status.value[0]);
 const date = ref();
 
-const updateHandler = async (username: string) => {
-  console.log('updateHandler:', username);
-
-}
+const updateHandler = (username: string) => {
+  membersStore.setSelectedUsername(username);
+  membersStore.setModalStatus(true);
+  const usernameStore = membersStore.selectedUsername;
+  const modalStatusStore = membersStore.modalStatus;
+  console.log(usernameStore, modalStatusStore);
+};
 
 const searchMembers = async () => {
   try {
@@ -93,6 +97,7 @@ const pad = (number: any) => {
 
 <template>
   <div class="px-4 sm:px-6 lg:px-8">
+    <UpdateModal v-if="membersStore.modalStatus" />
     <div class="sm:flex sm:items-center">
       <div class="sm:flex-auto">
         <h1 class="text-base font-semibold leading-6 text-gray-900">Users</h1>
